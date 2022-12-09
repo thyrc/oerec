@@ -1,0 +1,7 @@
+[client]
+user = "oerec"
+password = "<PASSWORD>"
+
+[db]
+dbname = "oere"
+host = "/run/postgresql"

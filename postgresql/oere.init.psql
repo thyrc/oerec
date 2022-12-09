@@ -1,0 +1,715 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 14.5
+-- Dumped by pg_dump version 14.5
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: usertype; Type: TYPE; Schema: public; Owner: oerec
+--
+
+CREATE TYPE public.usertype AS ENUM (
+    'AD user',
+    'tool user',
+    'external user'
+);
+
+
+ALTER TYPE public.usertype OWNER TO oerec;
+
+--
+-- Name: add_server_trigger_fn(); Type: FUNCTION; Schema: public; Owner: oerec
+--
+
+CREATE FUNCTION public.add_server_trigger_fn() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+INSERT INTO server_servergroup (server_id,servergroup_id) SELECT NEW.id, servergroup.id FROM servergroup WHERE servergroup.name = 'all';
+RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.add_server_trigger_fn() OWNER TO oerec;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: server; Type: TABLE; Schema: public; Owner: oerec
+--
+
+CREATE TABLE public.server (
+    id bigint NOT NULL,
+    name character varying(255) NOT NULL,
+    ip inet NOT NULL,
+    disabled boolean DEFAULT false NOT NULL,
+    use_dns boolean DEFAULT false NOT NULL,
+    comment text
+);
+
+
+ALTER TABLE public.server OWNER TO oerec;
+
+--
+-- Name: server_id_seq; Type: SEQUENCE; Schema: public; Owner: oerec
+--
+
+ALTER TABLE public.server ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.server_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: server_servergroup; Type: TABLE; Schema: public; Owner: oerec
+--
+
+CREATE TABLE public.server_servergroup (
+    server_id bigint NOT NULL,
+    servergroup_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.server_servergroup OWNER TO oerec;
+
+--
+-- Name: serveraccess; Type: TABLE; Schema: public; Owner: oerec
+--
+
+CREATE TABLE public.serveraccess (
+    id bigint NOT NULL,
+    name character varying(255) NOT NULL,
+    sshuser character varying(255) DEFAULT 'administrator'::character varying NOT NULL,
+    sshfrom character varying(255) DEFAULT NULL::character varying,
+    sshcommand character varying(255) DEFAULT NULL::character varying,
+    sshoption character varying(255) DEFAULT NULL::character varying,
+    server_id bigint,
+    servergroup_id bigint,
+    comment text
+);
+
+
+ALTER TABLE public.serveraccess OWNER TO oerec;
+
+--
+-- Name: serveraccess_id_seq; Type: SEQUENCE; Schema: public; Owner: oerec
+--
+
+ALTER TABLE public.serveraccess ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.serveraccess_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: servergroup; Type: TABLE; Schema: public; Owner: oerec
+--
+
+CREATE TABLE public.servergroup (
+    id bigint NOT NULL,
+    name character varying(255) NOT NULL,
+    comment text
+);
+
+
+ALTER TABLE public.servergroup OWNER TO oerec;
+
+--
+-- Name: servergroup_id_seq; Type: SEQUENCE; Schema: public; Owner: oerec
+--
+
+ALTER TABLE public.servergroup ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.servergroup_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: servergroup_servergroup; Type: TABLE; Schema: public; Owner: oerec
+--
+
+CREATE TABLE public.servergroup_servergroup (
+    subgroup_id bigint NOT NULL,
+    supergroup_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.servergroup_servergroup OWNER TO oerec;
+
+--
+-- Name: sshkeys; Type: TABLE; Schema: public; Owner: oerec
+--
+
+CREATE TABLE public.sshkeys (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    sshkey character varying(2048) NOT NULL,
+    fingerprint character varying(255) NOT NULL,
+    comment text
+);
+
+
+ALTER TABLE public.sshkeys OWNER TO oerec;
+
+--
+-- Name: sshkeys_id_seq; Type: SEQUENCE; Schema: public; Owner: oerec
+--
+
+ALTER TABLE public.sshkeys ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.sshkeys_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: user; Type: TABLE; Schema: public; Owner: oerec
+--
+
+CREATE TABLE public."user" (
+    id bigint NOT NULL,
+    email character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    type public.usertype DEFAULT 'AD user'::public.usertype NOT NULL,
+    disabled boolean DEFAULT false NOT NULL,
+    comment text
+);
+
+
+ALTER TABLE public."user" OWNER TO oerec;
+
+--
+-- Name: user_id_seq; Type: SEQUENCE; Schema: public; Owner: oerec
+--
+
+ALTER TABLE public."user" ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: user_usergroup; Type: TABLE; Schema: public; Owner: oerec
+--
+
+CREATE TABLE public.user_usergroup (
+    user_id bigint NOT NULL,
+    usergroup_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.user_usergroup OWNER TO oerec;
+
+--
+-- Name: useraccess; Type: TABLE; Schema: public; Owner: oerec
+--
+
+CREATE TABLE public.useraccess (
+    id bigint NOT NULL,
+    user_id bigint,
+    usergroup_id bigint,
+    serveraccess_id bigint NOT NULL,
+    comment text,
+    best_before timestamp without time zone DEFAULT '2256-05-11 00:00:00'::timestamp without time zone NOT NULL
+);
+
+
+ALTER TABLE public.useraccess OWNER TO oerec;
+
+--
+-- Name: useraccess_id_seq; Type: SEQUENCE; Schema: public; Owner: oerec
+--
+
+ALTER TABLE public.useraccess ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.useraccess_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: usergroup; Type: TABLE; Schema: public; Owner: oerec
+--
+
+CREATE TABLE public.usergroup (
+    id bigint NOT NULL,
+    name character varying(255) NOT NULL,
+    comment text
+);
+
+
+ALTER TABLE public.usergroup OWNER TO oerec;
+
+--
+-- Name: usergroup_id_seq; Type: SEQUENCE; Schema: public; Owner: oerec
+--
+
+ALTER TABLE public.usergroup ALTER COLUMN id ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public.usergroup_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: usergroup_usergroup; Type: TABLE; Schema: public; Owner: oerec
+--
+
+CREATE TABLE public.usergroup_usergroup (
+    subgroup_id bigint NOT NULL,
+    supergroup_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.usergroup_usergroup OWNER TO oerec;
+
+--
+-- Data for Name: server; Type: TABLE DATA; Schema: public; Owner: oerec
+--
+
+COPY public.server (id, name, ip, disabled, use_dns, comment) FROM stdin;
+\.
+
+
+--
+-- Data for Name: server_servergroup; Type: TABLE DATA; Schema: public; Owner: oerec
+--
+
+COPY public.server_servergroup (server_id, servergroup_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: serveraccess; Type: TABLE DATA; Schema: public; Owner: oerec
+--
+
+COPY public.serveraccess (id, name, sshuser, sshfrom, sshcommand, sshoption, server_id, servergroup_id, comment) FROM stdin;
+\.
+
+
+--
+-- Data for Name: servergroup; Type: TABLE DATA; Schema: public; Owner: oerec
+--
+
+COPY public.servergroup (id, name, comment) FROM stdin;
+1	all	@all
+\.
+
+
+--
+-- Data for Name: servergroup_servergroup; Type: TABLE DATA; Schema: public; Owner: oerec
+--
+
+COPY public.servergroup_servergroup (subgroup_id, supergroup_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: sshkeys; Type: TABLE DATA; Schema: public; Owner: oerec
+--
+
+COPY public.sshkeys (id, user_id, sshkey, fingerprint, comment) FROM stdin;
+\.
+
+
+--
+-- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: oerec
+--
+
+COPY public."user" (id, email, name, type, disabled, comment) FROM stdin;
+\.
+
+
+--
+-- Data for Name: user_usergroup; Type: TABLE DATA; Schema: public; Owner: oerec
+--
+
+COPY public.user_usergroup (user_id, usergroup_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: useraccess; Type: TABLE DATA; Schema: public; Owner: oerec
+--
+
+COPY public.useraccess (id, user_id, usergroup_id, serveraccess_id, comment, best_before) FROM stdin;
+\.
+
+
+--
+-- Data for Name: usergroup; Type: TABLE DATA; Schema: public; Owner: oerec
+--
+
+COPY public.usergroup (id, name, comment) FROM stdin;
+\.
+
+
+--
+-- Data for Name: usergroup_usergroup; Type: TABLE DATA; Schema: public; Owner: oerec
+--
+
+COPY public.usergroup_usergroup (subgroup_id, supergroup_id) FROM stdin;
+\.
+
+
+--
+-- Name: server_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oerec
+--
+
+SELECT pg_catalog.setval('public.server_id_seq', 1, false);
+
+
+--
+-- Name: serveraccess_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oerec
+--
+
+SELECT pg_catalog.setval('public.serveraccess_id_seq', 1, false);
+
+
+--
+-- Name: servergroup_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oerec
+--
+
+SELECT pg_catalog.setval('public.servergroup_id_seq', 1, true);
+
+
+--
+-- Name: sshkeys_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oerec
+--
+
+SELECT pg_catalog.setval('public.sshkeys_id_seq', 1, false);
+
+
+--
+-- Name: user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oerec
+--
+
+SELECT pg_catalog.setval('public.user_id_seq', 1, false);
+
+
+--
+-- Name: useraccess_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oerec
+--
+
+SELECT pg_catalog.setval('public.useraccess_id_seq', 1, false);
+
+
+--
+-- Name: usergroup_id_seq; Type: SEQUENCE SET; Schema: public; Owner: oerec
+--
+
+SELECT pg_catalog.setval('public.usergroup_id_seq', 1, false);
+
+
+--
+-- Name: server server_ip_key; Type: CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.server
+    ADD CONSTRAINT server_ip_key UNIQUE (ip);
+
+
+--
+-- Name: server server_name_key; Type: CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.server
+    ADD CONSTRAINT server_name_key UNIQUE (name);
+
+
+--
+-- Name: server server_pkey; Type: CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.server
+    ADD CONSTRAINT server_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: server_servergroup server_servergroup_server_id_servergroup_id_key; Type: CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.server_servergroup
+    ADD CONSTRAINT server_servergroup_server_id_servergroup_id_key UNIQUE (server_id, servergroup_id);
+
+
+--
+-- Name: serveraccess serveraccess_name_key; Type: CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.serveraccess
+    ADD CONSTRAINT serveraccess_name_key UNIQUE (name);
+
+
+--
+-- Name: serveraccess serveraccess_pkey; Type: CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.serveraccess
+    ADD CONSTRAINT serveraccess_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: servergroup servergroup_name_key; Type: CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.servergroup
+    ADD CONSTRAINT servergroup_name_key UNIQUE (name);
+
+
+--
+-- Name: servergroup servergroup_pkey; Type: CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.servergroup
+    ADD CONSTRAINT servergroup_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: sshkeys sshkeys_pkey; Type: CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.sshkeys
+    ADD CONSTRAINT sshkeys_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user user_email_key; Type: CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_email_key UNIQUE (email);
+
+
+--
+-- Name: user user_name_key; Type: CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_name_key UNIQUE (name);
+
+
+--
+-- Name: user user_pkey; Type: CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public."user"
+    ADD CONSTRAINT user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: user_usergroup user_usergroup_user_id_usergroup_id_key; Type: CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.user_usergroup
+    ADD CONSTRAINT user_usergroup_user_id_usergroup_id_key UNIQUE (user_id, usergroup_id);
+
+
+--
+-- Name: useraccess useraccess_pkey; Type: CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.useraccess
+    ADD CONSTRAINT useraccess_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: usergroup usergroup_name_key; Type: CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.usergroup
+    ADD CONSTRAINT usergroup_name_key UNIQUE (name);
+
+
+--
+-- Name: usergroup usergroup_pkey; Type: CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.usergroup
+    ADD CONSTRAINT usergroup_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: serveraccess_server_id_idx; Type: INDEX; Schema: public; Owner: oerec
+--
+
+CREATE INDEX serveraccess_server_id_idx ON public.serveraccess USING btree (server_id);
+
+
+--
+-- Name: serveraccess_servergroup_id_idx; Type: INDEX; Schema: public; Owner: oerec
+--
+
+CREATE INDEX serveraccess_servergroup_id_idx ON public.serveraccess USING btree (servergroup_id);
+
+
+--
+-- Name: sshkeys_user_id_idx; Type: INDEX; Schema: public; Owner: oerec
+--
+
+CREATE INDEX sshkeys_user_id_idx ON public.sshkeys USING btree (user_id);
+
+
+--
+-- Name: server server_insert_trigger; Type: TRIGGER; Schema: public; Owner: oerec
+--
+
+CREATE TRIGGER server_insert_trigger AFTER INSERT ON public.server FOR EACH ROW EXECUTE FUNCTION public.add_server_trigger_fn();
+
+
+--
+-- Name: server_servergroup server; Type: FK CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.server_servergroup
+    ADD CONSTRAINT server FOREIGN KEY (server_id) REFERENCES public.server(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: serveraccess serveraccess_servergroup; Type: FK CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.serveraccess
+    ADD CONSTRAINT serveraccess_servergroup FOREIGN KEY (servergroup_id) REFERENCES public.servergroup(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: serveraccess serveracess_server; Type: FK CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.serveraccess
+    ADD CONSTRAINT serveracess_server FOREIGN KEY (server_id) REFERENCES public.server(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: server_servergroup servergroup; Type: FK CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.server_servergroup
+    ADD CONSTRAINT servergroup FOREIGN KEY (servergroup_id) REFERENCES public.servergroup(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: sshkeys sshkeys_user; Type: FK CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.sshkeys
+    ADD CONSTRAINT sshkeys_user FOREIGN KEY (user_id) REFERENCES public."user"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: servergroup_servergroup subgroup; Type: FK CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.servergroup_servergroup
+    ADD CONSTRAINT subgroup FOREIGN KEY (subgroup_id) REFERENCES public.servergroup(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: usergroup_usergroup subgroup; Type: FK CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.usergroup_usergroup
+    ADD CONSTRAINT subgroup FOREIGN KEY (subgroup_id) REFERENCES public.usergroup(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: servergroup_servergroup supergroup; Type: FK CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.servergroup_servergroup
+    ADD CONSTRAINT supergroup FOREIGN KEY (supergroup_id) REFERENCES public.servergroup(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: usergroup_usergroup supergroup; Type: FK CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.usergroup_usergroup
+    ADD CONSTRAINT supergroup FOREIGN KEY (supergroup_id) REFERENCES public.usergroup(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: user_usergroup user; Type: FK CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.user_usergroup
+    ADD CONSTRAINT "user" FOREIGN KEY (user_id) REFERENCES public."user"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: useraccess useraccess_serveraccess; Type: FK CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.useraccess
+    ADD CONSTRAINT useraccess_serveraccess FOREIGN KEY (serveraccess_id) REFERENCES public.serveraccess(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: useraccess useraccess_user; Type: FK CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.useraccess
+    ADD CONSTRAINT useraccess_user FOREIGN KEY (user_id) REFERENCES public."user"(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: useraccess useraccess_usergroup; Type: FK CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.useraccess
+    ADD CONSTRAINT useraccess_usergroup FOREIGN KEY (usergroup_id) REFERENCES public.usergroup(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: user_usergroup usergroup; Type: FK CONSTRAINT; Schema: public; Owner: oerec
+--
+
+ALTER TABLE ONLY public.user_usergroup
+    ADD CONSTRAINT usergroup FOREIGN KEY (usergroup_id) REFERENCES public.usergroup(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
