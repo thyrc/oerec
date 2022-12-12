@@ -1,0 +1,91 @@
+oerec
+-----
+
+_oerec_ is a SSH Key Management tool.
+
+In fact _oerec_ is a CLI database client that helps me to organize SSH Keys and server access (*authorized_keys* files) across a small group of Linux servers.
+
+_oerec_ is not build with performance, but with simplicity in mind. That said, it should^(tm)^ work reasonably well in setups w/ "a few thousand" users / servers and "a few dozen" groups. This is left intentionally vague, as you should the one to decide what's acceptible performance, and what not.
+
+The _oerec_ client (or 'Øre client') can create, read, update and delete Linux server OpenSSH access information, which is stored in a PostgreSQL datebase. And it will generate *authorized_keys* files based on this information. It will *not* distribute the authorized_keys to the managed servers.
+
+Ideas & Assumptions
+~~~~~~~~~~~~~~~~~~~
+
+- Users are *uniquely* identified by *email*, this is enforced on database level.
+- Users can provide multiple public SSH keys.
+- Servers are *uniquely* identified by *IP*, this is enforced on database level as well, and will lead to complications with floating / virtual IPs.
+- Users and servers can be grouped into usergroups / servergroups (and groups can contain sub-groups).
+- Users *or* usergroups can be granted access ('_serveraccess_') to servers or servergroups.
+- '_serveraccess_' is defined at _server_ *or* _servergroup_ level.
+- All new servers are automatically added to the predefined '_all_' servergroup (but can be removed afterwards).
+
+Setup
+~~~~~
+
+Users, public SSH keys, servers, groups and access information is stored in a PostgreSQL database.
+
+An empty database can be created with the _postgresql/oere.init.psql_ SQL file.
+
+Database credentials & connection information will be read from the _oerec.toml_ config file.
+
+You should probably disable networking (if _oerec_ runs on the same machine as the database) & JIT in PostgreSQL, e.g.:
+
+[source,diff]
+-------------
+--- a/etc/postgresql/13/main/postgresql.conf
++++ b/etc/postgresql/13/main/postgresql.conf
+@@ -57,7 +57,7 @@ external_pid_file = '/var/run/postgresql/13-main.pid'         # write an extra PID fil
+ 
+ # - Connection Settings -
+ 
+-#listen_addresses = 'localhost'        # what IP address(es) to listen on;
++listen_addresses = ''          # what IP address(es) to listen on;
+                    # comma-separated list of addresses;
+                    # defaults to 'localhost'; use '*' for all
+                    # (change requires restart)
+@@ -89,7 +89,7 @@ unix_socket_directories = '/var/run/postgresql'   # comma-separated list of direct
+ # - Authentication -
+ 
+ #authentication_timeout = 1min     # 1s-600s
+-#password_encryption = md5     # md5 or scram-sha-256
++password_encryption = scram-sha-256    # md5 or scram-sha-256
+ #db_user_namespace = off
+ 
+ # GSSAPI using Kerberos
+@@ -412,7 +412,7 @@ min_wal_size = 80MB
+ #join_collapse_limit = 8       # 1 disables collapsing of explicit
+                    # JOIN clauses
+ #force_parallel_mode = off
+-#jit = on              # allow JIT compilation
++jit = off              # allow JIT compilation
+ #plan_cache_mode = auto            # auto, force_generic_plan or
+                    # force_custom_plan
+-------------
+
+Performance
+~~~~~~~~~~~
+
+Your mileage may and *will* vary, but using a small virtual machine (1 core / 1 thread @2GHz, 4GB RAM) I see:
+
+[source,text]
+-------------
+Statistics :)
+
+Server:
+  Servers:       96
+  Server Groups: 17
+  Server Access: 132
+
+User:
+  Users:         86
+  User Groups:   12
+  User Access:   151
+
+Keys:
+  Keys:          93
+
+Distribution:
+  Uniq auth lines:  2323
+  Generated in:     .232s
+-------------
