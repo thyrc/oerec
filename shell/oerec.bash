@@ -8,141 +8,273 @@ _oerec() {
 
     for i in ${COMP_WORDS[@]}
     do
-        case "${i}" in
-            "$1")
+        case "${cmd},${i}" in
+            ",$1")
                 cmd="oerec"
                 ;;
-            add-key)
-                cmd+="__add__key"
+            oerec,add-key)
+                cmd="oerec__add__key"
                 ;;
-            add-server)
-                cmd+="__add__server"
+            oerec,add-server)
+                cmd="oerec__add__server"
                 ;;
-            add-server-to-servergroup)
-                cmd+="__add__server__to__servergroup"
+            oerec,add-server-to-servergroup)
+                cmd="oerec__add__server__to__servergroup"
                 ;;
-            add-serveraccess)
-                cmd+="__add__serveraccess"
+            oerec,add-serveraccess)
+                cmd="oerec__add__serveraccess"
                 ;;
-            add-servergroup)
-                cmd+="__add__servergroup"
+            oerec,add-servergroup)
+                cmd="oerec__add__servergroup"
                 ;;
-            add-servergroup-to-servergroup)
-                cmd+="__add__servergroup__to__servergroup"
+            oerec,add-servergroup-to-servergroup)
+                cmd="oerec__add__servergroup__to__servergroup"
                 ;;
-            add-user)
-                cmd+="__add__user"
+            oerec,add-user)
+                cmd="oerec__add__user"
                 ;;
-            add-user-to-usergroup)
-                cmd+="__add__user__to__usergroup"
+            oerec,add-user-to-usergroup)
+                cmd="oerec__add__user__to__usergroup"
                 ;;
-            add-useraccess)
-                cmd+="__add__useraccess"
+            oerec,add-useraccess)
+                cmd="oerec__add__useraccess"
                 ;;
-            add-usergroup)
-                cmd+="__add__usergroup"
+            oerec,add-usergroup)
+                cmd="oerec__add__usergroup"
                 ;;
-            add-usergroup-to-usergroup)
-                cmd+="__add__usergroup__to__usergroup"
+            oerec,add-usergroup-to-usergroup)
+                cmd="oerec__add__usergroup__to__usergroup"
                 ;;
-            delete-key)
-                cmd+="__delete__key"
+            oerec,delete-key)
+                cmd="oerec__delete__key"
                 ;;
-            delete-server)
-                cmd+="__delete__server"
+            oerec,delete-server)
+                cmd="oerec__delete__server"
                 ;;
-            delete-server-from-servergroup)
-                cmd+="__delete__server__from__servergroup"
+            oerec,delete-server-from-servergroup)
+                cmd="oerec__delete__server__from__servergroup"
                 ;;
-            delete-serveraccess)
-                cmd+="__delete__serveraccess"
+            oerec,delete-serveraccess)
+                cmd="oerec__delete__serveraccess"
                 ;;
-            delete-servergroup)
-                cmd+="__delete__servergroup"
+            oerec,delete-servergroup)
+                cmd="oerec__delete__servergroup"
                 ;;
-            delete-servergroup-from-servergroup)
-                cmd+="__delete__servergroup__from__servergroup"
+            oerec,delete-servergroup-from-servergroup)
+                cmd="oerec__delete__servergroup__from__servergroup"
                 ;;
-            delete-user)
-                cmd+="__delete__user"
+            oerec,delete-user)
+                cmd="oerec__delete__user"
                 ;;
-            delete-user-from-usergroup)
-                cmd+="__delete__user__from__usergroup"
+            oerec,delete-user-from-usergroup)
+                cmd="oerec__delete__user__from__usergroup"
                 ;;
-            delete-useraccess)
-                cmd+="__delete__useraccess"
+            oerec,delete-useraccess)
+                cmd="oerec__delete__useraccess"
                 ;;
-            delete-usergroup)
-                cmd+="__delete__usergroup"
+            oerec,delete-usergroup)
+                cmd="oerec__delete__usergroup"
                 ;;
-            delete-usergroup-from-usergroup)
-                cmd+="__delete__usergroup__from__usergroup"
+            oerec,delete-usergroup-from-usergroup)
+                cmd="oerec__delete__usergroup__from__usergroup"
                 ;;
-            disable-dns)
-                cmd+="__disable__dns"
+            oerec,disable-dns)
+                cmd="oerec__disable__dns"
                 ;;
-            disable-server)
-                cmd+="__disable__server"
+            oerec,disable-server)
+                cmd="oerec__disable__server"
                 ;;
-            disable-user)
-                cmd+="__disable__user"
+            oerec,disable-user)
+                cmd="oerec__disable__user"
                 ;;
-            enable-dns)
-                cmd+="__enable__dns"
+            oerec,enable-dns)
+                cmd="oerec__enable__dns"
                 ;;
-            enable-server)
-                cmd+="__enable__server"
+            oerec,enable-server)
+                cmd="oerec__enable__server"
                 ;;
-            enable-user)
-                cmd+="__enable__user"
+            oerec,enable-user)
+                cmd="oerec__enable__user"
                 ;;
-            help)
-                cmd+="__help"
+            oerec,help)
+                cmd="oerec__help"
                 ;;
-            list-key)
-                cmd+="__list__key"
+            oerec,list-key)
+                cmd="oerec__list__key"
                 ;;
-            list-server)
-                cmd+="__list__server"
+            oerec,list-server)
+                cmd="oerec__list__server"
                 ;;
-            list-serveraccess)
-                cmd+="__list__serveraccess"
+            oerec,list-serveraccess)
+                cmd="oerec__list__serveraccess"
                 ;;
-            list-serverauth)
-                cmd+="__list__serverauth"
+            oerec,list-serverauth)
+                cmd="oerec__list__serverauth"
                 ;;
-            list-servergroup)
-                cmd+="__list__servergroup"
+            oerec,list-servergroup)
+                cmd="oerec__list__servergroup"
                 ;;
-            list-user)
-                cmd+="__list__user"
+            oerec,list-user)
+                cmd="oerec__list__user"
                 ;;
-            list-useraccess)
-                cmd+="__list__useraccess"
+            oerec,list-useraccess)
+                cmd="oerec__list__useraccess"
                 ;;
-            list-usergroup)
-                cmd+="__list__usergroup"
+            oerec,list-usergroup)
+                cmd="oerec__list__usergroup"
                 ;;
-            update-key)
-                cmd+="__update__key"
+            oerec,update-key)
+                cmd="oerec__update__key"
                 ;;
-            update-server)
-                cmd+="__update__server"
+            oerec,update-server)
+                cmd="oerec__update__server"
                 ;;
-            update-serveraccess)
-                cmd+="__update__serveraccess"
+            oerec,update-serveraccess)
+                cmd="oerec__update__serveraccess"
                 ;;
-            update-servergroup)
-                cmd+="__update__servergroup"
+            oerec,update-servergroup)
+                cmd="oerec__update__servergroup"
                 ;;
-            update-user)
-                cmd+="__update__user"
+            oerec,update-user)
+                cmd="oerec__update__user"
                 ;;
-            update-usergroup)
-                cmd+="__update__usergroup"
+            oerec,update-usergroup)
+                cmd="oerec__update__usergroup"
                 ;;
-            write-serverauth)
-                cmd+="__write__serverauth"
+            oerec,write-serverauth)
+                cmd="oerec__write__serverauth"
+                ;;
+            oerec__help,add-key)
+                cmd="oerec__help__add__key"
+                ;;
+            oerec__help,add-server)
+                cmd="oerec__help__add__server"
+                ;;
+            oerec__help,add-server-to-servergroup)
+                cmd="oerec__help__add__server__to__servergroup"
+                ;;
+            oerec__help,add-serveraccess)
+                cmd="oerec__help__add__serveraccess"
+                ;;
+            oerec__help,add-servergroup)
+                cmd="oerec__help__add__servergroup"
+                ;;
+            oerec__help,add-servergroup-to-servergroup)
+                cmd="oerec__help__add__servergroup__to__servergroup"
+                ;;
+            oerec__help,add-user)
+                cmd="oerec__help__add__user"
+                ;;
+            oerec__help,add-user-to-usergroup)
+                cmd="oerec__help__add__user__to__usergroup"
+                ;;
+            oerec__help,add-useraccess)
+                cmd="oerec__help__add__useraccess"
+                ;;
+            oerec__help,add-usergroup)
+                cmd="oerec__help__add__usergroup"
+                ;;
+            oerec__help,add-usergroup-to-usergroup)
+                cmd="oerec__help__add__usergroup__to__usergroup"
+                ;;
+            oerec__help,delete-key)
+                cmd="oerec__help__delete__key"
+                ;;
+            oerec__help,delete-server)
+                cmd="oerec__help__delete__server"
+                ;;
+            oerec__help,delete-server-from-servergroup)
+                cmd="oerec__help__delete__server__from__servergroup"
+                ;;
+            oerec__help,delete-serveraccess)
+                cmd="oerec__help__delete__serveraccess"
+                ;;
+            oerec__help,delete-servergroup)
+                cmd="oerec__help__delete__servergroup"
+                ;;
+            oerec__help,delete-servergroup-from-servergroup)
+                cmd="oerec__help__delete__servergroup__from__servergroup"
+                ;;
+            oerec__help,delete-user)
+                cmd="oerec__help__delete__user"
+                ;;
+            oerec__help,delete-user-from-usergroup)
+                cmd="oerec__help__delete__user__from__usergroup"
+                ;;
+            oerec__help,delete-useraccess)
+                cmd="oerec__help__delete__useraccess"
+                ;;
+            oerec__help,delete-usergroup)
+                cmd="oerec__help__delete__usergroup"
+                ;;
+            oerec__help,delete-usergroup-from-usergroup)
+                cmd="oerec__help__delete__usergroup__from__usergroup"
+                ;;
+            oerec__help,disable-dns)
+                cmd="oerec__help__disable__dns"
+                ;;
+            oerec__help,disable-server)
+                cmd="oerec__help__disable__server"
+                ;;
+            oerec__help,disable-user)
+                cmd="oerec__help__disable__user"
+                ;;
+            oerec__help,enable-dns)
+                cmd="oerec__help__enable__dns"
+                ;;
+            oerec__help,enable-server)
+                cmd="oerec__help__enable__server"
+                ;;
+            oerec__help,enable-user)
+                cmd="oerec__help__enable__user"
+                ;;
+            oerec__help,help)
+                cmd="oerec__help__help"
+                ;;
+            oerec__help,list-key)
+                cmd="oerec__help__list__key"
+                ;;
+            oerec__help,list-server)
+                cmd="oerec__help__list__server"
+                ;;
+            oerec__help,list-serveraccess)
+                cmd="oerec__help__list__serveraccess"
+                ;;
+            oerec__help,list-serverauth)
+                cmd="oerec__help__list__serverauth"
+                ;;
+            oerec__help,list-servergroup)
+                cmd="oerec__help__list__servergroup"
+                ;;
+            oerec__help,list-user)
+                cmd="oerec__help__list__user"
+                ;;
+            oerec__help,list-useraccess)
+                cmd="oerec__help__list__useraccess"
+                ;;
+            oerec__help,list-usergroup)
+                cmd="oerec__help__list__usergroup"
+                ;;
+            oerec__help,update-key)
+                cmd="oerec__help__update__key"
+                ;;
+            oerec__help,update-server)
+                cmd="oerec__help__update__server"
+                ;;
+            oerec__help,update-serveraccess)
+                cmd="oerec__help__update__serveraccess"
+                ;;
+            oerec__help,update-servergroup)
+                cmd="oerec__help__update__servergroup"
+                ;;
+            oerec__help,update-user)
+                cmd="oerec__help__update__user"
+                ;;
+            oerec__help,update-usergroup)
+                cmd="oerec__help__update__usergroup"
+                ;;
+            oerec__help,write-serverauth)
+                cmd="oerec__help__write__serverauth"
                 ;;
             *)
                 ;;
@@ -151,7 +283,7 @@ _oerec() {
 
     case "${cmd}" in
         oerec)
-            opts="-h -V -j --help --version --json list-user list-key list-server list-serverauth list-servergroup list-usergroup list-useraccess list-serveraccess add-server add-user add-key add-usergroup add-user-to-usergroup add-usergroup-to-usergroup add-servergroup add-server-to-servergroup add-servergroup-to-servergroup add-serveraccess add-useraccess delete-server delete-user delete-key delete-user-from-usergroup delete-usergroup-from-usergroup delete-usergroup delete-servergroup delete-server-from-servergroup delete-servergroup-from-servergroup delete-serveraccess delete-useraccess disable-user enable-user disable-server enable-server disable-dns enable-dns update-server update-servergroup update-user update-usergroup update-key update-serveraccess write-serverauth help"
+            opts="-j -h -V --json --help --version list-user list-key list-server list-serverauth list-servergroup list-usergroup list-useraccess list-serveraccess add-server add-user add-key add-usergroup add-user-to-usergroup add-usergroup-to-usergroup add-servergroup add-server-to-servergroup add-servergroup-to-servergroup add-serveraccess add-useraccess delete-server delete-user delete-key delete-user-from-usergroup delete-usergroup-from-usergroup delete-usergroup delete-servergroup delete-server-from-servergroup delete-servergroup-from-servergroup delete-serveraccess delete-useraccess disable-user enable-user disable-server enable-server disable-dns enable-dns update-server update-servergroup update-user update-usergroup update-key update-serveraccess write-serverauth help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 1 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
@@ -509,13 +641,17 @@ _oerec() {
             return 0
             ;;
         oerec__delete__server)
-            opts="-h --server --confirm --help"
+            opts="-h --servername --server --confirm --help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
             fi
             case "${prev}" in
                 --server)
+                    COMPREPLY=($(compgen -f "${cur}"))
+                    return 0
+                    ;;
+                --servername)
                     COMPREPLY=($(compgen -f "${cur}"))
                     return 0
                     ;;
@@ -865,8 +1001,624 @@ _oerec() {
             return 0
             ;;
         oerec__help)
-            opts="<SUBCOMMAND>..."
+            opts="list-user list-key list-server list-serverauth list-servergroup list-usergroup list-useraccess list-serveraccess add-server add-user add-key add-usergroup add-user-to-usergroup add-usergroup-to-usergroup add-servergroup add-server-to-servergroup add-servergroup-to-servergroup add-serveraccess add-useraccess delete-server delete-user delete-key delete-user-from-usergroup delete-usergroup-from-usergroup delete-usergroup delete-servergroup delete-server-from-servergroup delete-servergroup-from-servergroup delete-serveraccess delete-useraccess disable-user enable-user disable-server enable-server disable-dns enable-dns update-server update-servergroup update-user update-usergroup update-key update-serveraccess write-serverauth help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__add__key)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__add__server)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__add__server__to__servergroup)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__add__serveraccess)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__add__servergroup)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__add__servergroup__to__servergroup)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__add__user)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__add__user__to__usergroup)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__add__useraccess)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__add__usergroup)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__add__usergroup__to__usergroup)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__delete__key)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__delete__server)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__delete__server__from__servergroup)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__delete__serveraccess)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__delete__servergroup)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__delete__servergroup__from__servergroup)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__delete__user)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__delete__user__from__usergroup)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__delete__useraccess)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__delete__usergroup)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__delete__usergroup__from__usergroup)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__disable__dns)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__disable__server)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__disable__user)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__enable__dns)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__enable__server)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__enable__user)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__help)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__list__key)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__list__server)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__list__serveraccess)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__list__serverauth)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__list__servergroup)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__list__user)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__list__useraccess)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__list__usergroup)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__update__key)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__update__server)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__update__serveraccess)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__update__servergroup)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__update__user)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__update__usergroup)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
+                COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+                return 0
+            fi
+            case "${prev}" in
+                *)
+                    COMPREPLY=()
+                    ;;
+            esac
+            COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+            return 0
+            ;;
+        oerec__help__write__serverauth)
+            opts=""
+            if [[ ${cur} == -* || ${COMP_CWORD} -eq 3 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0
             fi

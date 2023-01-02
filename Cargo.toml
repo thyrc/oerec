@@ -1,13 +1,13 @@
 [package]
 name = "oerec"
-version = "0.7.1"
+version = "0.7.2"
 edition = "2021"
 publish = false
 build = "build.rs"
 
 [dependencies]
 base64 ="0.13"
-clap = { version = "3", default-features = false, features = ["std"] }
+clap = { version = "4", default-features = false, features = ["std"] }
 home = "0.5"
 log = "0.4"
 owo-colors = { version = "3", features = ["supports-colors"] }
@@ -24,8 +24,8 @@ toml = "0.5"
 walkdir = "2"
 
 [build-dependencies]
-clap = { version = "3", default-features = false, features = ["std"] }
-clap_complete = "3"
+clap = { version = "4", default-features = false, features = ["std"] }
+clap_complete = "4"
 
 [profile.release]
 opt-level = "z"

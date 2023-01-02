@@ -153,6 +153,7 @@ pub fn list_key(
         return Ok(());
     }
 
+    #[allow(clippy::uninlined_format_args)]
     if json {
         println!("{}", serde_json::to_string(&res).unwrap_or_default());
     } else if with_key {
@@ -313,7 +314,7 @@ pub fn list_serverauth(
     for auth in serverauth {
         println!("==> {}@{} <==\n", &auth.sshuser.user, &auth.serverip);
         for key in &auth.sshuser.authorized_keys.keys {
-            println!("{}", key);
+            println!("{key}");
         }
         println!();
     }
@@ -454,7 +455,13 @@ pub fn list_servergroup(
         let mut table = Table::new();
         table.set_format(*format::consts::FORMAT_NO_BORDER_LINE_SEPARATOR);
 
-        table.set_titles(row!["servergroup", "member", "ip", "comment", "subgroups"]);
+        table.set_titles(row![
+            "servergroup",
+            "member",
+            "ip",
+            "comment",
+            "w/ subgroups"
+        ]);
 
         for r in res {
             let ip = r.ip.map_or_else(|| "-".to_string(), |ip| ip.to_string());

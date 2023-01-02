@@ -99,7 +99,7 @@ pub fn set_or_ask_for(opt: Option<&str>, prompt: &str) -> String {
         (*opt).to_string()
     } else {
         let mut userinput = String::new();
-        print!("{}: ", prompt);
+        print!("{prompt}: ");
         if io::stdout().flush().is_err() {
             exit_with_message("Could not print to stdout.");
         };
@@ -303,8 +303,8 @@ fn main() {
             submatches
                 .get_one::<String>("ID")
                 .map(std::string::String::as_str),
-            submatches.contains_id("EXACT"),
-            matches.contains_id("JSONOUTPUT"),
+            submatches.get_flag("EXACT"),
+            matches.get_flag("JSONOUTPUT"),
         )
         .is_err()
         {
@@ -321,11 +321,11 @@ fn main() {
             submatches
                 .get_one::<String>("FINGERPRINT")
                 .map(std::string::String::as_str),
-            submatches.contains_id("WITHKEY"),
+            submatches.get_flag("WITHKEY"),
             submatches
                 .get_one::<String>("ID")
                 .map(std::string::String::as_str),
-            matches.contains_id("JSONOUTPUT"),
+            matches.get_flag("JSONOUTPUT"),
         )
         .is_err()
         {
@@ -345,8 +345,8 @@ fn main() {
             submatches
                 .get_one::<String>("ID")
                 .map(std::string::String::as_str),
-            submatches.contains_id("EXACT"),
-            matches.contains_id("JSONOUTPUT"),
+            submatches.get_flag("EXACT"),
+            matches.get_flag("JSONOUTPUT"),
         )
         .is_err()
         {
@@ -376,7 +376,7 @@ fn main() {
             submatches
                 .get_one::<OsString>("WORKDIR")
                 .map(std::ffi::OsString::as_os_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         );
     }
 
@@ -392,10 +392,10 @@ fn main() {
             submatches
                 .get_one::<String>("IP")
                 .map(std::string::String::as_str),
-            submatches.contains_id("EXACT"),
-            submatches.contains_id("ALL"),
-            submatches.contains_id("EMPTY"),
-            matches.contains_id("JSONOUTPUT"),
+            submatches.get_flag("EXACT"),
+            submatches.get_flag("ALL"),
+            submatches.get_flag("EMPTY"),
+            matches.get_flag("JSONOUTPUT"),
         )
         .is_err()
         {
@@ -411,9 +411,9 @@ fn main() {
             submatches
                 .get_one::<String>("EMAIL")
                 .map(std::string::String::as_str),
-            submatches.contains_id("EXACT"),
-            submatches.contains_id("EMPTY"),
-            matches.contains_id("JSONOUTPUT"),
+            submatches.get_flag("EXACT"),
+            submatches.get_flag("EMPTY"),
+            matches.get_flag("JSONOUTPUT"),
         )
         .is_err()
         {
@@ -445,9 +445,9 @@ fn main() {
             submatches
                 .get_one::<String>("USERGROUP")
                 .map(std::string::String::as_str),
-            submatches.contains_id("EXACT"),
-            submatches.contains_id("EXPIRED"),
-            matches.contains_id("JSONOUTPUT"),
+            submatches.get_flag("EXACT"),
+            submatches.get_flag("EXPIRED"),
+            matches.get_flag("JSONOUTPUT"),
         )
         .is_err()
         {
@@ -473,8 +473,8 @@ fn main() {
             submatches
                 .get_one::<String>("SERVERGROUP")
                 .map(std::string::String::as_str),
-            submatches.contains_id("EXACT"),
-            matches.contains_id("JSONOUTPUT"),
+            submatches.get_flag("EXACT"),
+            matches.get_flag("JSONOUTPUT"),
         )
         .is_err()
         {
@@ -491,8 +491,8 @@ fn main() {
             submatches
                 .get_one::<String>("IP")
                 .map(std::string::String::as_str),
-            submatches.contains_id("DISABLED"),
-            submatches.contains_id("DNS"),
+            submatches.get_flag("DISABLED"),
+            submatches.get_flag("DNS"),
             submatches
                 .get_one::<String>("COMMENT")
                 .map(std::string::String::as_str),
@@ -705,7 +705,7 @@ fn main() {
             submatches
                 .get_one::<String>("SERVER")
                 .map(std::string::String::as_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         )
         .is_err()
         {
@@ -719,7 +719,7 @@ fn main() {
             submatches
                 .get_one::<String>("EMAIL")
                 .map(std::string::String::as_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         )
         .is_err()
         {
@@ -733,7 +733,7 @@ fn main() {
             submatches
                 .get_one::<String>("KEYID")
                 .map(std::string::String::as_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         )
         .is_err()
         {
@@ -749,7 +749,7 @@ fn main() {
             submatches
                 .get_one::<String>("USERGROUP")
                 .map(std::string::String::as_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         )
         .is_err()
         {
@@ -766,7 +766,7 @@ fn main() {
             submatches
                 .get_one::<String>("SUPERGROUP")
                 .map(std::string::String::as_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         )
         .is_err()
         {
@@ -783,7 +783,7 @@ fn main() {
             submatches
                 .get_one::<String>("SERVERGROUP")
                 .map(std::string::String::as_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         )
         .is_err()
         {
@@ -800,7 +800,7 @@ fn main() {
             submatches
                 .get_one::<String>("SUPERGROUP")
                 .map(std::string::String::as_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         )
         .is_err()
         {
@@ -814,7 +814,7 @@ fn main() {
             submatches
                 .get_one::<String>("USERGROUP")
                 .map(std::string::String::as_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         )
         .is_err()
         {
@@ -828,7 +828,7 @@ fn main() {
             submatches
                 .get_one::<String>("SERVERGROUP")
                 .map(std::string::String::as_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         )
         .is_err()
         {
@@ -842,7 +842,7 @@ fn main() {
             submatches
                 .get_one::<String>("SERVERACCESS")
                 .map(std::string::String::as_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         )
         .is_err()
         {
@@ -862,7 +862,7 @@ fn main() {
             submatches
                 .get_one::<String>("SERVERACCESS")
                 .map(std::string::String::as_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         )
         .is_err()
         {
@@ -876,7 +876,7 @@ fn main() {
             submatches
                 .get_one::<String>("USEREMAIL")
                 .map(std::string::String::as_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         )
         .is_err()
         {
@@ -890,7 +890,7 @@ fn main() {
             submatches
                 .get_one::<String>("USEREMAIL")
                 .map(std::string::String::as_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         )
         .is_err()
         {
@@ -904,7 +904,7 @@ fn main() {
             submatches
                 .get_one::<String>("NAME")
                 .map(std::string::String::as_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         )
         .is_err()
         {
@@ -918,7 +918,7 @@ fn main() {
             submatches
                 .get_one::<String>("NAME")
                 .map(std::string::String::as_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         )
         .is_err()
         {
@@ -932,7 +932,7 @@ fn main() {
             submatches
                 .get_one::<String>("NAME")
                 .map(std::string::String::as_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         )
         .is_err()
         {
@@ -946,7 +946,7 @@ fn main() {
             submatches
                 .get_one::<String>("NAME")
                 .map(std::string::String::as_str),
-            submatches.contains_id("FORCE"),
+            submatches.get_flag("FORCE"),
         )
         .is_err()
         {

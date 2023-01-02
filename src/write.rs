@@ -59,7 +59,7 @@ pub fn write_serverauth(pgclient: &mut Client, dir: Option<&OsStr>, force: bool)
                 .write(true)
                 .create(true)
                 .append(true)
-                .open(&outdir.join("authorized_keys"))
+                .open(outdir.join("authorized_keys"))
             {
                 Ok(f) => f,
                 _ => exit_with_message("Could not write authorized_keys."),

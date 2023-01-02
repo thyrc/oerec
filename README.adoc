@@ -5,9 +5,9 @@ _oerec_ is a SSH Key Management tool.
 
 In fact _oerec_ is a CLI database client that helps me to organize SSH Keys and server access (*authorized_keys* files) across a small group of Linux servers.
 
-_oerec_ is not build with performance, but with simplicity in mind. That said, it should^(tm)^ work reasonably well in setups w/ "a few thousand" users / servers and "a few dozen" groups. This is left intentionally vague, as you should the one to decide what's acceptible performance, and what not.
+The _oerec_ client (or 'Øre client') can create, read, update and delete Linux server OpenSSH access information, which is stored in a PostgreSQL database. And it will generate *authorized_keys* files based on this information. It will *not* distribute the authorized_keys to the managed servers.
 
-The _oerec_ client (or 'Øre client') can create, read, update and delete Linux server OpenSSH access information, which is stored in a PostgreSQL datebase. And it will generate *authorized_keys* files based on this information. It will *not* distribute the authorized_keys to the managed servers.
+_oerec_ is not build with performance, but with simplicity in mind. That said, it should^(tm)^ work reasonably well in setups w/ "a few thousand" users / servers and "a few dozen" groups. This is left intentionally vague, as you should be the one to decide what's acceptible performance, and what not.
 
 Ideas & Assumptions
 ~~~~~~~~~~~~~~~~~~~
@@ -62,6 +62,20 @@ You should probably disable networking (if _oerec_ runs on the same machine as t
  #plan_cache_mode = auto            # auto, force_generic_plan or
                     # force_custom_plan
 -------------
+
+Where to Go from Here
+~~~~~~~~~~~~~~~~~~~~~
+
+Since _oerec_ does *not* distribute the generated authorized_keys files you will have to build something yourself. An idea of how you could(!) start...
+
+- Periodically write the authorized_keys files to a (local) Git repository.
+- Use Git to record / track changes.
+- Optionally push changes to remote.
+- Push changes to your managed servers (either from the machine where the DB is located, or alternativley a dedicated and equally well secured server with access to the authorized_keys repository).
+
+You could also build a web service, where your (managed) hosts can download their authorized_keys. In any case, you will have to take extra care, that only the 'correct' files are offered to the clients / hosts.
+
+The distribution of the generated files will be more challenging than just copying files around. And you should take your time to build something secure.
 
 Performance
 ~~~~~~~~~~~
