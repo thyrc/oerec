@@ -1807,7 +1807,7 @@ _oerec() {
             return 0
             ;;
         oerec__list__useraccess)
-            opts="-e -h --email --server --ip --user --sshuser --serveraccess --servergroup --usergroup --expired --exact --help"
+            opts="-e -h --email --server --ip --user --sshuser --serveraccess --servergroup --usergroup --expired --disabled --exact --help"
             if [[ ${cur} == -* || ${COMP_CWORD} -eq 2 ]] ; then
                 COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
                 return 0

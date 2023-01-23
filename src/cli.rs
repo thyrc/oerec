@@ -327,6 +327,7 @@ Options:
 
         --expired                       List only expired useraccess entries
     -e, --exact                         Only list exact matches
+        --disabled                      Only show disabled (user *or* server) entries
 
     -h, --help                          Print this message
 
@@ -383,6 +384,12 @@ Filter:
                         .long("expired")
                         .action(ArgAction::SetTrue)
                         .help("List only expired useraccess entries"),
+                )
+                .arg(
+                    Arg::new("DISABLED")
+                        .long("disabled")
+                        .action(ArgAction::SetTrue)
+                        .help("List only disabled useraccess entries"),
                 )
                 .arg(
                 Arg::new("EXACT")

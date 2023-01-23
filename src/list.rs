@@ -606,6 +606,7 @@ pub fn list_usergroup(
 }
 
 #[allow(clippy::too_many_arguments)]
+#[allow(clippy::fn_params_excessive_bools)]
 #[allow(clippy::too_many_lines)]
 pub fn list_useraccess(
     pgclient: &mut Client,
@@ -618,6 +619,7 @@ pub fn list_useraccess(
     usergroup: Option<&str>,
     exact: bool,
     expired: bool,
+    disabled: bool,
     json: bool,
 ) -> Result<(), Error> {
     let mut query_string = if email.is_some()
@@ -627,6 +629,7 @@ pub fn list_useraccess(
         || serveraccess.is_some()
         || servergroup.is_some()
         || usergroup.is_some()
+        || disabled
         || json
     {
         // show members of groups as well
@@ -692,6 +695,7 @@ pub fn list_useraccess(
              AND ua.user_id = u.id
              AND sa.server_id = s.id
              AND NOT s.disabled
+             AND NOT u.disabled
              AND ua.best_before >= NOW()
            UNION
            SELECT u.email,
@@ -709,6 +713,7 @@ pub fn list_useraccess(
            WHERE ua.serveraccess_id = sa.id
              AND ua.user_id = u.id
              AND sa.servergroup_id = sg.id
+             AND NOT u.disabled
              AND ua.best_before >= NOW()
            UNION
            SELECT '-' AS email,
@@ -751,6 +756,11 @@ pub fn list_useraccess(
 
     if expired {
         query_string = query_string.replace(">=", "<");
+    }
+
+    if disabled {
+        query_string = query_string.replace(r#"NOT "user".disabled"#, r#"("user".disabled"#);
+        query_string = query_string.replace(r#"AND NOT server.disabled"#, r#"OR server.disabled)"#);
     }
 
     let mut res = Vec::new();

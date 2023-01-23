@@ -447,6 +447,7 @@ fn main() {
                 .map(std::string::String::as_str),
             submatches.get_flag("EXACT"),
             submatches.get_flag("EXPIRED"),
+            submatches.get_flag("DISABLED"),
             matches.get_flag("JSONOUTPUT"),
         )
         .is_err()
