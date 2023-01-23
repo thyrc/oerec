@@ -53,14 +53,9 @@ pub fn generate_serverauth(pgclient: &mut Client, ip: Option<&str>) -> Vec<Serve
     for name in dns_enabled {
         let mut n = name.get::<&str, String>("name");
         n.push_str(":80");
-        let addrs = match n.to_socket_addrs() {
-            Ok(x) => x,
-            _ => vec![].into_iter(),
-        };
-
-        let iplist = addrs.map(|x| x.ip()).collect::<Vec<IpAddr>>();
-
-        if iplist.is_empty() {
+        let addrs = if let Ok(x) = n.to_socket_addrs() {
+            x
+        } else {
             eprintln!(
                 "(DNS Query) No IP address found for '{}'",
                 &n.trim_end_matches(":80")
@@ -70,7 +65,9 @@ pub fn generate_serverauth(pgclient: &mut Client, ip: Option<&str>) -> Vec<Serve
                 &n.trim_end_matches(":80")
             );
             continue;
-        }
+        };
+
+        let iplist = addrs.map(|x| x.ip()).collect::<Vec<IpAddr>>();
 
         if !iplist.contains(&name.get::<&str, IpAddr>("ip")) {
             if pgclient
