@@ -179,7 +179,10 @@ pub fn update_servergroup(
     let mut newservergroupname = ask_for(
         &ListObject::ServerGroup,
         newservergroup,
-        Some("New server group name [<Enter>: no change]"),
+        Some(&format!(
+            "New server group name [<Enter>: '{}']",
+            oldservergroupname.if_supports_color(Stdout, owo_colors::OwoColorize::green)
+        )),
         pgclient,
     );
 
@@ -432,7 +435,10 @@ pub fn update_usergroup(
     let mut newusergroupname = ask_for(
         &ListObject::UserGroup,
         newusergroup,
-        Some("New user group name [<Enter>: no change]"),
+        Some(&format!(
+            "New user group name [<Enter>: '{}']",
+            oldusergroupname.if_supports_color(Stdout, owo_colors::OwoColorize::green)
+        )),
         pgclient,
     );
 
