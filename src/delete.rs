@@ -725,7 +725,7 @@ pub fn delete_serveraccess(
     serveraccess: Option<&str>,
     force: bool,
 ) -> Result<(), Error> {
-    println!("Delete server access^");
+    println!("Delete server access");
     let query_string = r#"DELETE FROM serveraccess WHERE name = $1"#;
 
     let oldserveraccess = ask_for(&ListObject::ServerAccess, serveraccess, None, pgclient);
