@@ -1,25 +1,30 @@
-#![allow(clippy::module_name_repetitions)]
 use log::{error, warn};
-use postgres::Client;
+use postgres::{Client, Error};
 use serde_derive::Serialize;
 use std::collections::HashMap;
+use std::ffi::OsStr;
+use std::fs::{self, remove_dir_all, OpenOptions};
+use std::io;
+use std::io::prelude::*;
 use std::net::{IpAddr, ToSocketAddrs};
+use std::path::PathBuf;
+use walkdir::{DirEntry, WalkDir};
 
 use crate::exit_with_message;
 
 #[derive(Debug, Serialize)]
-pub struct AuthorizedKeys {
+struct AuthorizedKeys {
     pub keys: Vec<String>,
 }
 
 #[derive(Debug, Serialize)]
-pub struct AuthorizedUser {
+struct AuthorizedUser {
     pub user: String,
     pub authorized_keys: AuthorizedKeys,
 }
 
 #[derive(Debug, Serialize)]
-pub struct ServerAuth {
+struct ServerAuth {
     pub serverip: String,
     pub sshuser: AuthorizedUser,
 }
@@ -39,23 +44,20 @@ struct AuthQuery {
 }
 
 #[allow(clippy::too_many_lines)]
-pub fn generate_serverauth(pgclient: &mut Client, ip: Option<&str>) -> Vec<ServerAuth> {
-    let dns_enabled = match pgclient.query(
+fn generate(pgclient: &mut Client, ip: Option<&str>) -> Vec<ServerAuth> {
+    let Ok(dns_enabled) = pgclient.query(
         "SELECT ip, name FROM server WHERE use_dns AND NOT disabled",
         &[],
-    ) {
-        Ok(x) => x,
-        Err(_) => exit_with_message("Could not generate resolve list."),
+    ) else {
+        exit_with_message("Could not generate list of addresses to resolve.")
     };
 
-    let update_query = r#"UPDATE server SET ip = $1 WHERE name = $2"#;
+    let update_query = r"UPDATE server SET ip = $1 WHERE name = $2";
 
     for name in dns_enabled {
         let mut n = name.get::<&str, String>("name");
         n.push_str(":80");
-        let addrs = if let Ok(x) = n.to_socket_addrs() {
-            x
-        } else {
+        let Ok(addrs) = n.to_socket_addrs() else {
             eprintln!(
                 "(DNS Query) No IP address found for '{}'",
                 &n.trim_end_matches(":80")
@@ -147,9 +149,8 @@ pub fn generate_serverauth(pgclient: &mut Client, ip: Option<&str>) -> Vec<Serve
 
     let mut serverauth: Vec<ServerAuth> = Vec::new();
 
-    let res = match pgclient.query(auth_query, &[]) {
-        Ok(x) => x,
-        Err(_) => exit_with_message("Could not generate auth list."),
+    let Ok(res) = pgclient.query(auth_query, &[]) else {
+        exit_with_message("Could not generate auth list.")
     };
 
     let mut hm = HashMap::new();
@@ -205,7 +206,7 @@ pub fn generate_serverauth(pgclient: &mut Client, ip: Option<&str>) -> Vec<Serve
         l.push(' ');
         l.push_str(&auth.email);
         if let Some(comment) = &auth.comment {
-            l.push_str(r#" ("#);
+            l.push_str(r" (");
             l.push_str(comment);
             l.push(')');
         }
@@ -232,4 +233,102 @@ pub fn generate_serverauth(pgclient: &mut Client, ip: Option<&str>) -> Vec<Serve
     }
 
     serverauth
+}
+
+pub fn list(
+    pgclient: &mut Client,
+    ip: Option<&str>,
+    servername: Option<&str>,
+) -> Result<(), Error> {
+    let query_string = r"SELECT ip FROM server WHERE name = $1";
+
+    let serverip: Option<&str>;
+    let val;
+    if let Some(servername) = servername {
+        let res = pgclient.query(query_string, &[&servername])?;
+
+        if res.is_empty() {
+            return Ok(());
+        }
+
+        val = res[0].get::<&str, std::net::IpAddr>("ip").to_string();
+        serverip = Some(&val);
+    } else {
+        serverip = ip;
+    }
+
+    let serverauth = generate(pgclient, serverip);
+
+    for auth in serverauth {
+        println!("==> {}@{} <==\n", &auth.sshuser.user, &auth.serverip);
+        for key in &auth.sshuser.authorized_keys.keys {
+            println!("{key}");
+        }
+        println!();
+    }
+
+    Ok(())
+}
+
+fn is_hidden(entry: &DirEntry) -> bool {
+    entry
+        .file_name()
+        .to_str()
+        .map_or(false, |s| s.starts_with('.'))
+}
+
+pub fn write(pgclient: &mut Client, dir: Option<&OsStr>, force: bool) {
+    let serverauth = crate::serverauth::generate(pgclient, None);
+
+    let workdir = match dir {
+        Some(dir) => PathBuf::from(dir),
+        _ => exit_with_message("Could not write authorized_keys."),
+    };
+
+    if workdir.is_dir() && !force {
+        print!(
+            "Directory '{}' already exists. Do you want to delete *all* entries in the tree? [y/N]: ",
+            &workdir.display()
+        );
+        let mut userinput = String::new();
+        io::stdout().flush().unwrap();
+        io::stdin().read_line(&mut userinput).unwrap();
+        if !userinput.trim().to_lowercase().eq("y") {
+            println!("Operation cancelled.");
+            std::process::exit(1);
+        }
+    }
+
+    let walker = WalkDir::new(&workdir).min_depth(1).max_depth(1).into_iter();
+    for dir in walker.filter_entry(|e| !is_hidden(e)).flatten() {
+        if remove_dir_all(dir.path()).is_err() {
+            exit_with_message("Could not clean workdir.");
+        }
+    }
+
+    for auth in serverauth {
+        let outdir = workdir.join(&auth.serverip).join(&auth.sshuser.user);
+
+        if fs::create_dir_all(&outdir).is_err() {
+            exit_with_message("Could not write authorized_keys.");
+        }
+
+        for key in &auth.sshuser.authorized_keys.keys {
+            let Ok(mut file) = OpenOptions::new()
+                .create(true)
+                .append(true)
+                .open(outdir.join("authorized_keys"))
+            else {
+                exit_with_message("Could not write authorized_keys.")
+            };
+
+            if file.write(key.as_bytes()).is_err() {
+                exit_with_message("Could not write authorized_keys.");
+            };
+
+            if file.write_all("\n".as_bytes()).is_err() {
+                exit_with_message("Could not write authorized_keys.");
+            }
+        }
+    }
 }

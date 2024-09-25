@@ -1,0 +1,19 @@
+deploy_keys.sh
+--------------
+
+This is an example.
+
+Ideas & Assumptions
+~~~~~~~~~~~~~~~~~~~
+
+- runs in a Linux enviroment and relies on a couple of coreutils, find, sed, awk etc.
+- changes are tracked using git, local repository will be $work_dir ('_/var/lib/oere_')
+- the user running this script has write permissions on $work_dir ('_/var/lib/oere_') and $log_file ('_/var/log/oere_sync.log_')
+- the user running this script has root SSH access to all managed servers
+- uses ssh / sftp to distribute authorized_keys files
+- default 'root' user key is /root/.ssh/id_ed25519.pub
+- uses parallel-sh to run deployment jobs in parallel (xargs should work as well)
+
+... and then some, I guess.
+
+Because you're about to manage access (including root access!) to all manages servers with this you should be extra carefull. And because this script is build around the ideas implemented in my private little setup (static servers, key signing, log monitoring etc.), and is based on assumptions which are not neccessarily true in your environment, you should probably build something new.
